@@ -8,17 +8,10 @@ const Calculator: React.FC = () => {
   const [formula, setFormula] = useState('');
   const [storedValue, setStoredValue] = useState<number | null>(null);
   const [operator, setOperator] = useState<string | null>(null);
-  const [waitingForOperand, setWaitingForOperand] = useState(true);
 
   const inputDigit = (digit: string) => {
-    if (waitingForOperand) {
-      setDisplayValue(digit);
-      setFormula(prev => prev + (prev.length > 0 ? " " : "") + digit);
-      setWaitingForOperand(false);
-    } else {
-      setDisplayValue(displayValue === '0' ? digit : displayValue + digit);
-      setFormula(prev => (prev.length > 0 ? prev.slice(0, prev.lastIndexOf(displayValue)) : "") + displayValue + digit);
-    }
+    setDisplayValue(displayValue === '0' ? digit : displayValue + digit);
+    setFormula(prev => prev + digit);
   };
 
   const clearAll = () => {
@@ -26,33 +19,31 @@ const Calculator: React.FC = () => {
     setFormula('');
     setStoredValue(null);
     setOperator(null);
-    setWaitingForOperand(true);
   };
 
   const inputDot = () => {
-    if (waitingForOperand) {
-      setDisplayValue('0.');
-      setFormula(prev => prev + " 0.");
-      setWaitingForOperand(false);
-    } else if (!displayValue.includes('.')) {
+    if (!displayValue.includes('.')) {
       setDisplayValue(displayValue + '.');
       setFormula(prev => prev + '.');
     }
   };
 
   const inputOperator = (nextOperator: string) => {
-    if (!waitingForOperand && operator && storedValue !== null) {
-      const currentValue = parseFloat(displayValue);
-      const computedValue = performCalculation(storedValue, currentValue, operator);
-      setStoredValue(computedValue);
-      setDisplayValue(String(computedValue));
-      setFormula(prev => `${prev} ${nextOperator}`);
+    const newValue = displayValue || (storedValue ? String(storedValue) : '0');
+    setFormula(`${newValue} ${nextOperator} `);
+
+    if (operator && storedValue !== null) {
+      if (displayValue !== '') {
+        const currentValue = parseFloat(displayValue);
+        const computedValue = performCalculation(storedValue, currentValue, operator);
+        setStoredValue(computedValue);
+        setDisplayValue(String(computedValue));
+      }
     } else {
       setStoredValue(parseFloat(displayValue));
-      setFormula(formula + (formula.length > 0 ? ` ${nextOperator}` : displayValue + ` ${nextOperator}`));
     }
-    setWaitingForOperand(true);
     setOperator(nextOperator);
+    setDisplayValue('0');
   };
 
   const performCalculation = (value1: number, value2: number, currentOperator: string): number => {
@@ -71,15 +62,26 @@ const Calculator: React.FC = () => {
   };
 
   const calculate = () => {
-    if (!waitingForOperand && operator && storedValue !== null) {
+    if (operator && storedValue !== null) {
       const currentValue = parseFloat(displayValue);
       const newValue = performCalculation(storedValue, currentValue, operator);
       setDisplayValue(String(newValue));
-      setFormula(prev => `${prev} = ${newValue}`);
+      setFormula(prev => prev + ` ${currentValue} = ${newValue}`);
       setStoredValue(null);
       setOperator(null);
-      setWaitingForOperand(true);
     }
+  };
+
+  const createDigits = () => {
+    const digits = [];
+    for (let i = 1; i < 10; i++) {
+      digits.push(
+        <button key={i} onClick={() => inputDigit(String(i))}>
+          {i}
+        </button>
+      );
+    }
+    return digits;
   };
 
   return (
@@ -87,9 +89,7 @@ const Calculator: React.FC = () => {
       <div className="calculator">
         <div className="display">{displayValue}</div>
         <div className="button-panel">
-          {[...Array(9).keys()].map(n =>
-            <button key={n} onClick={() => inputDigit(String(n + 1))}>{n + 1}</button>
-          )}
+          {createDigits()}
           <button onClick={() => inputDigit('0')}>0</button>
           <button onClick={inputDot}>.</button>
           <button onClick={() => inputOperator('+')}>+</button>
@@ -101,7 +101,7 @@ const Calculator: React.FC = () => {
         </div>
       </div>
       <div className="formula-display">
-        {formula}
+        <div className="formula">{formula}</div>
       </div>
     </div>
   );
