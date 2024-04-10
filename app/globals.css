@@ -37,16 +37,19 @@ body {
 
 .calculator-container {
   display: flex;
-  justify-content: space-around; /* Adjust the spacing between elements */
+  justify-content: center;
+  align-items: flex-start;
+  max-width: 1000px;
+  margin: auto;
 }
 
 .calculator {
+  
   background: white;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   padding: 20px;
-  max-width: 600px;
-  width: 325px;
+  width: 325px; 
   text-align: center;
 }
 
@@ -57,11 +60,14 @@ body {
   font-size: 2rem;
   margin-bottom: 10px;
   padding: 10px;
-  min-height: 60px;
+  height: 60px; 
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  color: #333
+  overflow-x: visible;
+  overflow-y: hidden;
+  white-space: nowrap; 
+  color: #333;
 }
 
 .button-panel {
@@ -92,14 +98,18 @@ button:hover {
   align-items: flex-start; 
 }
 .formula-display {
-  margin-left: 20px; 
-  border-left: 1px solid #ccc; 
+  flex: 1;
+  margin-left: 20px;
+  border-left: 1px solid #ccc;
   padding-left: 20px;
   white-space: pre-wrap;
+  max-height: 200px; 
+  width: 400px;
+  overflow-y: auto;
+  overflow-x: auto; 
 }
 
 .formula {
-  
   white-space: nowrap;
   overflow: auto; 
   max-height: 100px; 
