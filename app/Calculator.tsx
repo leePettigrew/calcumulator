@@ -1,4 +1,5 @@
 // this makes sure it doesnt act as a server comp
+// Calculator.jsx
 "use client";
 
 import React, { useState } from 'react';
@@ -66,11 +67,13 @@ const Calculator = () => {
       const currentValue = parseFloat(displayValue);
       const newValue = performCalculation(storedValue, currentValue, operator);
       setDisplayValue(String(newValue));
-      setFormula((prev) => prev + ` ${currentValue} = ${newValue}`);
+      // Update the formula to display the entire calculation
+      setFormula(`${storedValue} ${operator} ${currentValue} = ${newValue}`);
       setStoredValue(null);
       setOperator(null);
     }
   };
+  
 
   const createDigits = () => {
     const digits = [];

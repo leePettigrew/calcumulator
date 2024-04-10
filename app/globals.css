@@ -102,7 +102,7 @@ button:hover {
   margin-left: 20px;
   border-left: 1px solid #ccc;
   padding-left: 20px;
-  white-space: pre-wrap;
+  white-space: nowrap;
   max-height: 200px; 
   width: 400px;
   overflow-y: auto;
