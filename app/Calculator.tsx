@@ -1,5 +1,4 @@
 // this makes sure it doesnt act as a server comp
-// Calculator.jsx
 "use client";
 
 import React, { useState } from 'react';
