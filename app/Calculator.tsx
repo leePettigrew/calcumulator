@@ -17,6 +17,16 @@ const Calculator = () => {
   const clearAll = () => {
     setDisplayValue('0');
     setFormula('');
+    setStoredValue(null);
+    setOperator(null);
+  };
+
+  const inputDot = () => {
+    if (!displayValue.includes('.')) {
+      setDisplayValue(displayValue + '.');
+      setFormula((prev) => prev + '.');
+    }
+  };
 
   const inputOperator = (nextOperator: string) => {
     const newValue = displayValue || (storedValue ? String(storedValue) : '0');
